@@ -1,0 +1,156 @@
+# IMAP Spam Filter
+
+A Python-based email spam filter that uses Google's Gemini AI to classify emails and optionally move spam to designated folders. The tool connects to IMAP servers, analyzes emails for spam characteristics, and provides interactive spam management.
+
+## Features
+
+- **AI-Powered Classification**: Uses Google Gemini AI to analyze email content for spam indicators
+- **Interactive Spam Management**: Prompts user before moving emails to spam folder
+- **Configurable Spam Folder**: Supports custom spam folder names (default: "Junk")
+- **IMAP Folder Discovery**: List all available folders on your IMAP server
+- **Robust Email Moving**: Uses IMAP MOVE with fallback to COPY+DELETE
+- **Multiple Authentication Methods**: Command-line arguments or environment variables
+
+## Setup
+
+### Prerequisites
+
+- Python 3.11.4 or higher
+- Access to an IMAP email server
+- Google Gemini API key
+
+### Installation
+
+```bash
+# Create and activate Python virtual environment
+pyenv virtualenv 3.11.4 imap-spam-filter
+pyenv local imap-spam-filter
+
+# Install dependencies
+make install
+```
+
+## Configuration
+
+### Required Credentials
+
+- **IMAP Server Details**: Server address, port, username, password
+- **Gemini API Key**: For AI-powered spam classification
+
+### Authentication Methods
+
+**Option 1: Command Line Arguments**
+```bash
+python spam_filter.py \
+    --imap-server="your.imap.server" \
+    --imap-port="993" \
+    --imap-username="your-email@domain.com" \
+    --imap-password="your-password" \
+    --gemini-api-key="your-gemini-key"
+```
+
+**Option 2: Environment Variables**
+```bash
+export DOCKER_ENV=true
+export IMAP_SERVER="your.imap.server"
+export IMAP_PORT="993"
+export IMAP_USERNAME="your-email@domain.com"
+export IMAP_PASSWORD="your-password"
+export GEMINI_API_KEY="your-gemini-key"
+export SPAM_FOLDER="Junk"  # Optional, defaults to "Junk"
+export LIMIT="10"          # Optional, defaults to 10 emails
+```
+
+## Usage
+
+### Basic Commands
+
+```bash
+# Run spam filter with interactive prompts
+make spam-filter
+
+# List all available IMAP folders
+make list-folders
+
+# Clean Python cache files
+make clean
+```
+
+### Advanced Usage
+
+```bash
+# Use custom spam folder
+python spam_filter.py --spam-folder="Spam" [other-args...]
+
+# Analyze more emails
+python spam_filter.py --limit=50 [other-args...]
+
+# List folders only
+python list_folders.py [imap-args...]
+```
+
+### Interactive Workflow
+
+1. Tool connects to your IMAP server
+2. Fetches recent emails (default: 10)
+3. For each email:
+   - Displays subject and sender
+   - Analyzes content using Gemini AI
+   - Shows classification result
+   - If spam: prompts "Move this spam email to Junk folder? (y/n)"
+   - User decides whether to move or keep email
+
+## Project Structure
+
+```
+├── spam_filter.py          # Main spam filtering application
+├── list_folders.py         # IMAP folder listing utility
+├── imap_config_parser.py   # Shared configuration parsing
+├── email_client.py         # IMAP client wrapper
+├── spam_classifier.py      # Gemini AI integration
+├── config.py              # Configuration data classes
+├── requirements.txt       # Python dependencies
+├── Makefile              # Build and run commands
+└── CLAUDE.md             # Developer documentation
+```
+
+## Dependencies
+
+- `google-genai`: Google Gemini AI integration
+- `imapclient`: IMAP client library
+
+## Security Notes
+
+- Never commit credentials to version control
+- Use environment variables or secure credential management
+- The tool only reads emails and moves spam - it doesn't delete permanently
+- Moved emails can be recovered from the spam folder if needed
+
+## Troubleshooting
+
+### Common Issues
+
+**"GEMINI_API_KEY is required"**
+- Ensure you have a valid Google Gemini API key
+- Check that the key is properly set via command line or environment variable
+
+**"IMAP_USERNAME and IMAP_PASSWORD are required"**
+- Verify your email credentials are correct
+- Some email providers require app-specific passwords
+
+**"Failed to move email to spam folder"**
+- Check that the spam folder exists (use `make list-folders`)
+- Verify folder name spelling and case sensitivity
+- Some IMAP servers use different folder names (e.g., "Spam", "Junk Email")
+
+### Finding Your Spam Folder
+
+```bash
+# List all folders to find the correct spam folder name
+make list-folders
+```
+
+Common spam folder names by provider:
+- **Gmail**: `[Gmail]/Spam`
+- **Outlook/Exchange**: `Junk Email` or `Junk`
+- **Generic IMAP**: `Spam`, `Junk`, `INBOX.Junk`
