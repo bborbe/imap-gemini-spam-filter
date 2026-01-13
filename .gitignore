@@ -1,5 +1,5 @@
 /vendor
 /CLAUDE.md
-/.claude
+/.claude/
 /coverage.out
-.mcp-personal/
+/.mcp-*
