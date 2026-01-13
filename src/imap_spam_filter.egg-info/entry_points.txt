@@ -1,0 +1,2 @@
+[console_scripts]
+imap-spam-filter = imap_spam_filter.__main__:main

@@ -154,3 +154,7 @@ Common spam folder names by provider:
 - **Gmail**: `[Gmail]/Spam`
 - **Outlook/Exchange**: `Junk Email` or `Junk`
 - **Generic IMAP**: `Spam`, `Junk`, `INBOX.Junk`
+
+## License
+
+BSD 2-Clause License - See [LICENSE](LICENSE) for details.
