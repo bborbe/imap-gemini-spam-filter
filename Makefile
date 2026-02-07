@@ -65,5 +65,5 @@ check: lint typecheck
 
 .PHONY: test
 # Run tests with pytest
-test:
+test: sync
 	uv run pytest
